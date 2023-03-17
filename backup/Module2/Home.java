@@ -9,12 +9,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import java.util.List;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Home {
@@ -37,7 +31,6 @@ public class Home {
             WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
             logout_button.click();
 
-            // SLEEP_STMT_10: Wait for Logout to complete
             // Wait for Logout to Complete
             Thread.sleep(3000);
 
@@ -61,12 +54,6 @@ public class Home {
             searchBox.clear();
             searchBox.sendKeys(product);
             Thread.sleep(3000);
-            // WebDriverWait wait = new WebDriverWait(driver, 30);
-            // wait.until(ExpectedConditions.and(
-            //         ExpectedConditions.elementToBeClickable(By.xpath(
-            //                 "//*[@id='root']/div/div/div[3]/div/div[2]/div/div/div[2]/button")),
-            //         ExpectedConditions.elementToBeClickable(
-            //                 By.xpath("//*[@id='root']/div/div/div[3]/div/div[2]/div/h4"))));
             return true;
         } catch (Exception e) {
             System.out.println("Error while searching for a product: " + e.getMessage());
@@ -80,6 +67,11 @@ public class Home {
     public List<WebElement> getSearchResults() {
         List<WebElement> searchResults = new ArrayList<WebElement>() {};
         try {
+            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
+            // Find all webelements corresponding to the card content section of each of
+            // search results
+            searchResults = driver
+                    .findElements(By.xpath("//div[@class='MuiCardContent-root css-1qw96cp']"));
             return searchResults;
         } catch (Exception e) {
             System.out.println("There were no search results: " + e.getMessage());
@@ -144,7 +136,6 @@ public class Home {
             }
 
             // System.out.println("Unable to find the given product");
-            System.out.println("Unable to find the given product");
             return false;
         } catch (Exception e) {
             System.out.println("Exception while performing add to cart: " + e.getMessage());
