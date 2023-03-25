@@ -37,7 +37,7 @@ public class Register {
             // Concatenate the timestamp to string to form unique timestamp
             test_data_username = Username + "_" + String.valueOf(timestamp.getTime());
         else
-        test_data_username = Username;
+            test_data_username = Username;
 
         // Type the generated username in the username field
         username_txt_box.sendKeys(test_data_username);
@@ -64,9 +64,13 @@ public class Register {
 
 
         // SLEEP_STMT_06: Wait for new user to get created in the backend
-        //Thread.sleep(3000);
-        WebDriverWait wait = new WebDriverWait(driver,30);
-        wait.until(ExpectedConditions.urlToBe("https://crio-qkart-frontend-qa.vercel.app/login"));
+        // Thread.sleep(3000);
+        // WebDriverWait wait = new WebDriverWait(driver, 20);
+        // wait.until(
+        // ExpectedConditions.urlToBe("https://crio-qkart-frontend-qa.vercel.app/register"));
+        synchronized (driver) {
+            driver.wait(2000);
+        }
 
         this.lastGeneratedUsername = test_data_username;
 

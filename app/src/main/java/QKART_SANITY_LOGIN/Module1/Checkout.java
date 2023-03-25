@@ -40,9 +40,11 @@ public class Checkout {
             WebElement addressTextAreaElement = driver.findElement(
                     By.xpath("//textarea[@placeholder='Enter your complete address']"));
             addressTextAreaElement.sendKeys(addresString);
-
             WebElement addButtonElement = driver.findElement(By.xpath("//button[text()='Add']"));
             addButtonElement.click();
+            WebDriverWait wait = new WebDriverWait(driver, 20);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[@id='root']/div/div[2]/div[1]/div/div[1]/div/div[1]")));
             return false;
         } catch (Exception e) {
             System.out.println("Exception occurred while entering address: " + e.getMessage());
@@ -71,7 +73,7 @@ public class Checkout {
                     break;
                 }
             }
-            //System.out.println("Unable to find the given address");
+            // System.out.println("Unable to find the given address");
             return false;
         } catch (Exception e) {
             System.out.println(
@@ -105,9 +107,14 @@ public class Checkout {
     public Boolean verifyInsufficientBalanceMessage() {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 08: MILESTONE 7
-            WebElement errorMessageElement = driver.findElement(By.xpath("//*[text()='You do not have enough balance in your wallet for this purchase']"));
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath(
+                    "//*[text()='You do not have enough balance in your wallet for this purchase']"))));
+            WebElement errorMessageElement = driver.findElement(By.xpath(
+                    "//*[text()='You do not have enough balance in your wallet for this purchase']"));
             String errorMessage = errorMessageElement.getText();
-            if (errorMessage.equals("You do not have enough balance in your wallet for this purchase")) {
+            if (errorMessage
+                    .equals("You do not have enough balance in your wallet for this purchase")) {
                 return true;
             }
             return false;

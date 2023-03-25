@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -40,10 +42,9 @@ public class SearchResult {
 
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 04: MILESTONE 2
             // Find the link of size chart in the parentElement and click on it
-            WebElement sizeChart =
-                    parentElement.findElement(By.xpath(".//button[text()='Size chart']"));
+            WebElement sizeChart = parentElement.findElement(By.tagName("button"));
             sizeChart.click();
-
+            Thread.sleep(2000);
             return true;
         } catch (Exception e) {
             System.out.println("Exception while opening Size chart: " + e.getMessage());
@@ -56,13 +57,20 @@ public class SearchResult {
      */
     public Boolean closeSizeChart(WebDriver driver) {
         try {
-            Thread.sleep(2000);
+            // Thread.sleep(2000);
+            synchronized (driver) {
+                driver.wait(2000);
+            }
             Actions action = new Actions(driver);
 
             // Clicking on "ESC" key closes the size chart modal
             action.sendKeys(Keys.ESCAPE);
             action.perform();
-            Thread.sleep(2000);
+            // Thread.sleep(2000);
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions
+                    .invisibilityOfElementLocated(By.xpath("//div[@role='dialog']")));
+
             return true;
         } catch (Exception e) {
             System.out.println("Exception while closing the size chart: " + e.getMessage());
@@ -83,7 +91,7 @@ public class SearchResult {
              * = true , else set to false
              */
             WebElement sizeChart =
-                    parentElement.findElement(By.xpath(".//button[text()='Size chart']"));
+                    parentElement.findElement(By.xpath("//button[text()='Size chart']"));
             if (sizeChart.isDisplayed()) {
                 String expectedText = "Size chart";
                 String actualText = sizeChart.getText();
@@ -114,6 +122,9 @@ public class SearchResult {
              * Validate that the contents of expectedTableBody are present in the table body in the
              * same order
              */
+
+            // WebElement sizeChartParent = driver.findElement(By.xpath("//div[@role='dialog']"));
+            // WebElement tableElement = sizeChartParent.findElement(By.tagName("table"));
             List<WebElement> tableHeaderElements =
                     driver.findElements(By.xpath("//table/thead//th"));
             for (int i = 0; i < expectedTableHeaders.size(); i++) {
@@ -143,9 +154,6 @@ public class SearchResult {
                     }
                 }
             }
-
-
-
             return status;
 
         } catch (Exception e) {
