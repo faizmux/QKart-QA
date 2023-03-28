@@ -28,8 +28,8 @@ public class Checkout {
     public Boolean addNewAddress(String addresString) {
         try {
             /*
-             * Click on the "Add new address" button, enter the addressString in the address
-             * text box and click on the "ADD" button to save the address
+             * Click on the "Add new address" button, enter the addressString in the address text
+             * box and click on the "ADD" button to save the address
              */
             WebElement addNewAddressButton = driver.findElement(By.id("add-new-btn"));
             addNewAddressButton.click();
@@ -43,9 +43,9 @@ public class Checkout {
                 if (button.getText().equals("ADD")) {
                     button.click();
                     WebDriverWait wait = new WebDriverWait(driver, 30);
-                    wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(String.format(
-                            "//*[@class='MuiTypography-root MuiTypography-body1 css-yg30e6' and text()='%s']",
-                            addresString))));
+                    wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(String
+                            .format("//*[@class='MuiTypography-root MuiTypography-body1 css-yg30e6' and text()='%s']",
+                                    addresString))));
                     return true;
                 }
             }
@@ -64,23 +64,32 @@ public class Checkout {
     public Boolean selectAddress(String addressToSelect) {
         try {
             /*
-             * Iterate through all the address boxes to find the address box with matching
-             * text, addressToSelect and click on it
+             * Iterate through all the address boxes to find the address box with matching text,
+             * addressToSelect and click on it
              */
-            WebElement parentBox = driver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div[1]/div/div[1]"));
-            List<WebElement> allBoxes = parentBox.findElements(By.className("not-selected"));
+            // WebElement parentBox =
+            // driver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div[1]/div/div[1]"));
+            // List<WebElement> allBoxes = parentBox.findElements(By.className("not-selected"));
 
-            for (WebElement box : allBoxes) {
-                if (box.findElement(By.className("css-yg30e6")).getText().replaceAll(" ", "")
-                        .equals(addressToSelect.replaceAll(" ", ""))) {
-                    box.findElement(By.tagName("input")).click();
-                    return true;
-                }
+            // for (WebElement box : allBoxes) {
+            // if (box.findElement(By.className("css-yg30e6")).getText().replaceAll(" ", "")
+            // .equals(addressToSelect.replaceAll(" ", ""))) {
+            // box.findElement(By.tagName("input")).click();
+            // return true;
+            // }
+            // }
+            if (driver.findElement(By.xpath("//*[text()='" + addressToSelect + "']"))
+                    .isDisplayed()) {
+                driver.findElement(
+                        By.xpath("//*[text()='" + addressToSelect + "']//preceding-sibling::span"))
+                        .click();
             }
             System.out.println("Unable to find the given address");
             return false;
+
         } catch (Exception e) {
-            System.out.println("Exception Occurred while selecting the given address: " + e.getMessage());
+            System.out.println(
+                    "Exception Occurred while selecting the given address: " + e.getMessage());
             return false;
         }
 
@@ -93,13 +102,18 @@ public class Checkout {
     public Boolean placeOrder() {
         try {
             // Find the "PLACE ORDER" button and click on it
-            List<WebElement> elements = driver.findElementsByClassName("css-177pwqq");
-            for (WebElement element : elements) {
-                if (element.getText().equals("PLACE ORDER")) {
-                    element.click();
-                    return true;
-                }
+
+            if (driver.findElement(By.xpath("//button[text()='PLACE ORDER']")).isEnabled()) {
+                driver.findElement(By.xpath("//button[text()='PLACE ORDER']")).click();
+                return true;
             }
+            // List<WebElement> elements = driver.findElementsByClassName("css-177pwqq");
+            // for (WebElement element : elements) {
+            //     if (element.getText().equals("PLACE ORDER")) {
+            //         element.click();
+            //         return true;
+            //     }
+            // }
             return false;
 
         } catch (Exception e) {
@@ -115,13 +129,15 @@ public class Checkout {
         try {
             WebElement alertMessage = driver.findElement(By.id("notistack-snackbar"));
             if (alertMessage.isDisplayed()) {
-                if (alertMessage.getText().equals("You do not have enough balance in your wallet for this purchase")) {
+                if (alertMessage.getText().equals(
+                        "You do not have enough balance in your wallet for this purchase")) {
                     return true;
                 }
             }
             return false;
         } catch (Exception e) {
-            System.out.println("Exception while verifying insufficient balance message: " + e.getMessage());
+            System.out.println(
+                    "Exception while verifying insufficient balance message: " + e.getMessage());
             return false;
         }
     }
